@@ -1,6 +1,10 @@
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
+
 function cliente() {
   (nomeCliente = String),
-    (telefone = Number),
-    (cpf = Number),
-    (numeroPedido = Number);
+    (cpf = String),
+    (telefone = String),
+    (dataNascimento = Date),
+    (endereco = String);
 }
