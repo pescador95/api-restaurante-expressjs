@@ -1,6 +1,3 @@
 function controleEstoque() {
-  (itemEstoque = String),
-    (quantidadeItem = Number),
-    (custoUn = Number),
-    (valorTotal = Number);
+  (itemEstoque = String), (quantidadeItem = Number), (valorUnidade = Number);
 }

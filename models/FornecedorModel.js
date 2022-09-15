@@ -3,6 +3,6 @@ function fornecedor() {
     (cpnj = String),
     (itemPedido = String),
     (quantidadeItem = Number),
-    (valorUn = Number),
+    (valorUnidade = Number),
     (valorTotal = Number);
 }

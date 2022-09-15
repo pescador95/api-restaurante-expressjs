@@ -1,8 +1,7 @@
-function fechamentoLancamentoPedido() {
+function fechamentoPedido() {
   (numeroPedido = Number),
     (idCliente = Number),
     (itemPedido = String),
     (quantidadeItem = Number),
-    (valorUn = Number),
-    (valorTotal = Number);
+    (valorUnidade = Number);
 }
