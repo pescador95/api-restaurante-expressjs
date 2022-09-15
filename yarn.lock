@@ -2,23 +2,6 @@
 # yarn lockfile v1
 
 
-"@prisma/client@^4.3.1":
-  "integrity" "sha512-FA0/d1VMJNWqzU7WVWTNWJ+lGOLR9JUBnF73GdIPAEVo/6dWk4gHx0EmgeU+SMv4MZoxgOeTBJF2azhg7x0hMw=="
-  "resolved" "https://registry.npmjs.org/@prisma/client/-/client-4.3.1.tgz"
-  "version" "4.3.1"
-  dependencies:
-    "@prisma/engines-version" "4.3.0-32.c875e43600dfe042452e0b868f7a48b817b9640b"
-
-"@prisma/engines-version@4.3.0-32.c875e43600dfe042452e0b868f7a48b817b9640b":
-  "integrity" "sha512-8yWpXkQRmiSfsi2Wb/ZS5D3RFbeu/btL9Pm/gdF4phB0Lo5KGsDFMxFMgaD64mwED2nHc8ZaEJg/+4Jymb9Znw=="
-  "resolved" "https://registry.npmjs.org/@prisma/engines-version/-/engines-version-4.3.0-32.c875e43600dfe042452e0b868f7a48b817b9640b.tgz"
-  "version" "4.3.0-32.c875e43600dfe042452e0b868f7a48b817b9640b"
-
-"@prisma/engines@4.3.1":
-  "integrity" "sha512-4JF/uMaEDAPdcdZNOrnzE3BvrbGpjgV0FcPT3EVoi6I86fWkloqqxBt+KcK/+fIRR0Pxj66uGR9wVH8U1Y13JA=="
-  "resolved" "https://registry.npmjs.org/@prisma/engines/-/engines-4.3.1.tgz"
-  "version" "4.3.1"
-
 "@types/node@^18.7.17":
   "integrity" "sha512-0UyfUnt02zIuqp7yC8RYtDkp/vo8bFaQ13KkSEvUAohPOAlnVNbj5Fi3fgPSuwzakS+EvvnnZ4x9y7i6ASaSPQ=="
   "resolved" "https://registry.npmjs.org/@types/node/-/node-18.7.17.tgz"
@@ -49,6 +32,11 @@
   "integrity" "sha512-PCVAQswWemu6UdxsDFFX/+gVeYqKAod3D3UVm91jHwynguOwAvYPhx8nNlM++NqRcK6CxxpUafjmhIdKiHibqg=="
   "resolved" "https://registry.npmjs.org/array-flatten/-/array-flatten-1.1.1.tgz"
   "version" "1.1.1"
+
+"assert-options@0.7.0":
+  "integrity" "sha512-7q9uNH/Dh8gFgpIIb9ja8PJEWA5AQy3xnBC8jtKs8K/gNVCr1K6kIvlm59HUyYgvM7oEDoLzGgPcGd9FqhtXEQ=="
+  "resolved" "https://registry.npmjs.org/assert-options/-/assert-options-0.7.0.tgz"
+  "version" "0.7.0"
 
 "balanced-match@^1.0.0":
   "integrity" "sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw=="
@@ -493,10 +481,25 @@
   "resolved" "https://registry.npmjs.org/pg-int8/-/pg-int8-1.0.1.tgz"
   "version" "1.0.1"
 
+"pg-minify@1.6.2":
+  "integrity" "sha512-1KdmFGGTP6jplJoI8MfvRlfvMiyBivMRP7/ffh4a11RUFJ7kC2J0ZHlipoKiH/1hz+DVgceon9U2qbaHpPeyPg=="
+  "resolved" "https://registry.npmjs.org/pg-minify/-/pg-minify-1.6.2.tgz"
+  "version" "1.6.2"
+
 "pg-pool@^3.5.2":
   "integrity" "sha512-His3Fh17Z4eg7oANLob6ZvH8xIVen3phEZh2QuyrIl4dQSDVEabNducv6ysROKpDNPSD+12tONZVWfSgMvDD9w=="
   "resolved" "https://registry.npmjs.org/pg-pool/-/pg-pool-3.5.2.tgz"
   "version" "3.5.2"
+
+"pg-promise@^10.12.0":
+  "integrity" "sha512-7uN64iEHrhtRcOaU/AT3925S20JzQJG2nWVK2IUz5SlhB1eNdkXjAYoQtei+5kLJo81mOWcFq7x9J9VRldp0ig=="
+  "resolved" "https://registry.npmjs.org/pg-promise/-/pg-promise-10.12.0.tgz"
+  "version" "10.12.0"
+  dependencies:
+    "assert-options" "0.7.0"
+    "pg" "8.8.0"
+    "pg-minify" "1.6.2"
+    "spex" "3.2.0"
 
 "pg-protocol@^1.5.0":
   "integrity" "sha512-muRttij7H8TqRNu/DxrAJQITO4Ac7RmX3Klyr/9mJEOBeIpgnF8f9jAfRz5d3XwQZl5qBjF9gLsUtMPJE0vezQ=="
@@ -514,7 +517,7 @@
     "postgres-date" "~1.0.4"
     "postgres-interval" "^1.1.0"
 
-"pg@^8.8.0", "pg@>=8.0":
+"pg@^8.8.0", "pg@>=8.0", "pg@8.8.0":
   "integrity" "sha512-UXYN0ziKj+AeNNP7VDMwrehpACThH7LUl/p8TDFpEUuSejCUIwGSfxpHsPvtM6/WXFy6SU4E5RG4IJV/TZAGjw=="
   "resolved" "https://registry.npmjs.org/pg/-/pg-8.8.0.tgz"
   "version" "8.8.0"
@@ -567,13 +570,6 @@
   "version" "0.0.1"
   dependencies:
     "empty-dir" "^0.1.0"
-
-"prisma@*", "prisma@^4.3.1":
-  "integrity" "sha512-90xo06wtqil76Xsi3mNpc4Js3SdDRR5g4qb9h+4VWY4Y8iImJY6xc3PX+C9xxTSt1lr0Q89A0MLkJjd8ax6KiQ=="
-  "resolved" "https://registry.npmjs.org/prisma/-/prisma-4.3.1.tgz"
-  "version" "4.3.1"
-  dependencies:
-    "@prisma/engines" "4.3.1"
 
 "proxy-addr@~2.0.7":
   "integrity" "sha512-llQsMLSUDUPT44jdrU/O37qlnifitDP+ZwrmmZcoSKyLKvtZxpyV0n2/bD/N4tBAAZ/gJEdZU7KMraoK1+XYAg=="
@@ -686,6 +682,11 @@
   "version" "1.0.7"
   dependencies:
     "semver" "~7.0.0"
+
+"spex@3.2.0":
+  "integrity" "sha512-9srjJM7NaymrpwMHvSmpDeIK5GoRMX/Tq0E8aOlDPS54dDnDUIp30DrP9SphMPEETDLzEM9+4qo+KipmbtPecg=="
+  "resolved" "https://registry.npmjs.org/spex/-/spex-3.2.0.tgz"
+  "version" "3.2.0"
 
 "split2@^4.1.0":
   "integrity" "sha512-VBiJxFkxiXRlUIeyMQi8s4hgvKCSjtknJv/LVYbrgALPwf5zSKmEwV9Lst25AkvMDnvxODugjdl6KZgwKM1WYQ=="

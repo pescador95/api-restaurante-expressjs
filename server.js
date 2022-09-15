@@ -2,7 +2,7 @@ const express = require("express");
 
 const bodyParser = require("body-parser");
 
-const conn = require("./config/bd");
+const conn = require("./src/config/bd");
 
 const app = express();
 

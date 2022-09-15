@@ -1,17 +1,20 @@
-const pg = require("pg");
-var conn = "postgres://user:password@host/database";
 require("dotenv").config();
+const pg = require("pg-promise");
 
 var config = {
   host: process.env.HOST,
-  user: process.env.USER,
+  username: process.env.USERNAME,
   password: process.env.PASSWORD,
 
   database: process.env.DATABASE,
   port: process.env.PORT,
 };
 
-pg.connect(conn, function (err, client, done) {
+const db = pg(
+  `postgres://${config.username}:${config.password}@${config.host}:${config.port}/${config.database}`
+);
+
+db.one(conn, function (err, client, done) {
   if (err) {
     return console.error("error fetching client from pool", err);
   }
@@ -23,4 +26,4 @@ pg.connect(conn, function (err, client, done) {
     console.log(result.rows[0].number);
   });
 });
-module.exports = conn;
+module.exports = db;
