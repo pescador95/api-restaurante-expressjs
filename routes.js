@@ -52,10 +52,10 @@ routes.put("/lancamentoPedido/:id", LancamentoPedidoController.update);
 routes.delete("/lancamentoPedido/:id", LancamentoPedidoController.delete);
 
 //Rota Fechamento Pedido
-routes.get("/produto", ProdutoController.index);
-routes.post("/produto", ProdutoController.create);
-routes.get("/produto/:id", ProdutoController.get);
-routes.put("/produto/:id", ProdutoController.update);
-routes.delete("/produto/:id", ProdutoController.delete);
+routes.get("/fechamentoPedido", FechamentoPedidoController.index);
+routes.post("/fechamentoPedido", FechamentoPedidoController.create);
+routes.get("/fechamentoPedido/:id", FechamentoPedidoController.get);
+routes.put("/fechamentoPedido/:id", FechamentoPedidoController.update);
+routes.delete("/fechamentoPedido/:id", FechamentoPedidoController.delete);
 
 export default routes;
