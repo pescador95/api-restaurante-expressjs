@@ -1,17 +1,30 @@
-require("dotenv").config();
-const pg = require("pg-promise");
+var config = require("dotenv").config();
+const pgp = require("pg-promise");
 
-var config = {
-  host: process.env.HOST,
-  username: process.env.USERNAME,
+config = {
+  user: process.env.USER,
   password: process.env.PASSWORD,
-
-  database: process.env.DATABASE,
+  host: process.env.HOST,
   port: process.env.PORT,
+  database: process.env.DATABASE,
 };
 
-const db = pg(
-  `postgres://${config.username}:${config.password}@${config.host}:${config.port}/${config.database}`
+const cn = {
+  host: `localhost`,
+  port: 5432,
+  database: "api_restaurante",
+  user: "postgres",
+  password: "postgres",
+  max: 30,
+};
+
+const db = pgp(
+  config
+
+  // use up to 30 connections
+  //  `postgres://username:password@host:port/database`
+  //`postgres://postgres:postgres@localhost:5432/api_restaurante`
+  // `${config.driver}://${config.user}:${config.password}@${config.host}:${config.port}/${config.database}`
 );
 
 db.one(conn, function (err, client, done) {

@@ -4,7 +4,7 @@ import FornecedorController from "./controller/FornecedorController";
 import FuncionarioController from "./controller/FuncionarioController";
 import ProdutoController from "./controller/ProdutoController";
 import ControleEstoqueController from "./controller/ControleEstoqueController";
-import LancamentoPedidoController from "./controller/LancamentoPedidoController";
+import PedidoController from "./controller/PedidoController";
 import FechamentoPedidoController from "./controller/FechamentoPedidoController";
 
 const routes = new Router();
@@ -45,17 +45,10 @@ routes.put("/controleEstoque/:id", ControleEstoqueController.update);
 routes.delete("/controleEstoque/:id", ControleEstoqueController.delete);
 
 //Rota Lancamento Pedido
-routes.get("/lancamentoPedido", LancamentoPedidoController.index);
-routes.post("/lancamentoPedido", LancamentoPedidoController.create);
-routes.get("/lancamentoPedido/:id", LancamentoPedidoController.get);
-routes.put("/lancamentoPedido/:id", LancamentoPedidoController.update);
-routes.delete("/lancamentoPedido/:id", LancamentoPedidoController.delete);
-
-//Rota Fechamento Pedido
-routes.get("/fechamentoPedido", FechamentoPedidoController.index);
-routes.post("/fechamentoPedido", FechamentoPedidoController.create);
-routes.get("/fechamentoPedido/:id", FechamentoPedidoController.get);
-routes.put("/fechamentoPedido/:id", FechamentoPedidoController.update);
-routes.delete("/fechamentoPedido/:id", FechamentoPedidoController.delete);
+routes.get("/pedido", PedidoController.index);
+routes.post("/pedido", PedidoController.create);
+routes.get("/pedido/:id", PedidoController.get);
+routes.put("/pedido/:id", PedidoController.update);
+routes.delete("/pedido/:id", PedidoController.delete);
 
 export default routes;
