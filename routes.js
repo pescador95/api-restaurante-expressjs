@@ -3,9 +3,9 @@ import ClienteController from "./controller/ClienteController";
 import FornecedorController from "./controller/FornecedorController";
 import FuncionarioController from "./controller/FuncionarioController";
 import ProdutoController from "./controller/ProdutoController";
-import ControleEstoqueController from "./controller/ControleEstoqueController";
-import PedidoController from "./controller/PedidoController";
-import FechamentoPedidoController from "./controller/FechamentoPedidoController";
+import EstoqueController from "./controller/EstoqueController";
+import PedidoClienteController from "./controller/PedidoClienteController";
+import PedidoFornecedorController from "./controller/PedidoFornecedorController";
 
 const routes = new Router();
 
@@ -37,18 +37,25 @@ routes.get("/produto/:id", ProdutoController.get);
 routes.put("/produto/:id", ProdutoController.update);
 routes.delete("/produto/:id", ProdutoController.delete);
 
-//Rota Controle Estoque
-routes.get("/controleEstoque", ControleEstoqueController.index);
-routes.post("/controleEstoque", ControleEstoqueController.create);
-routes.get("/controleEstoque/:id", ControleEstoqueController.get);
-routes.put("/controleEstoque/:id", ControleEstoqueController.update);
-routes.delete("/controleEstoque/:id", ControleEstoqueController.delete);
+//Rota Estoque
+routes.get("/estoque", EstoqueController.index);
+routes.post("/estoque", EstoqueController.create);
+routes.get("/estoque/:id", EstoqueController.get);
+routes.put("/estoque/:id", EstoqueController.update);
+routes.delete("/estoque/:id", EstoqueController.delete);
+
+//Rota Lancamento Pedido Cliente
+routes.get("/pedidoCliente", PedidoClienteController.index);
+routes.post("/pedidoCliente", PedidoClienteController.create);
+routes.get("/pedidoCliente/:id", PedidoClienteController.get);
+routes.put("/pedidoCliente/:id", PedidoClienteController.update);
+routes.delete("/pedidoCliente/:id", PedidoClienteController.delete);
 
 //Rota Lancamento Pedido
-routes.get("/pedido", PedidoController.index);
-routes.post("/pedido", PedidoController.create);
-routes.get("/pedido/:id", PedidoController.get);
-routes.put("/pedido/:id", PedidoController.update);
-routes.delete("/pedido/:id", PedidoController.delete);
+routes.get("/pedidoFornecedor", PedidoFornecedorController.index);
+routes.post("/pedidoFornecedor", PedidoFornecedorController.create);
+routes.get("/pedidoFornecedor/:id", PedidoFornecedorController.get);
+routes.put("/pedidoFornecedor/:id", PedidoFornecedorController.update);
+routes.delete("/pedidoFornecedor/:id", PedidoFornecedorController.delete);
 
 export default routes;
