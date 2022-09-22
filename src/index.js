@@ -2,7 +2,7 @@ const express = require("express");
 const { Pool } = require("pg");
 require("dotenv").config();
 const PORT = 3333;
-
+const jwt = require("jsonwebtoken");
 const pool = new Pool({
   connectionString: `postgres://postgres:postgres@localhost:5432/api_restaurante`,
 });
@@ -15,7 +15,34 @@ app.get("/", (req, res) => {
   console.log("Hello World");
 });
 
-app.get("/cliente/", async (req, res) => {
+app.post("/login", (req, res, next) => {
+  if (req.body.user === "user" && req.body.password === "123") {
+    const id = 1;
+    const token = jwt.sign({ id }, process.env.SECRET, {
+      expiresIn: 600,
+    });
+    return res.json({ auth: true, token: token });
+  }
+  res.status(500).json({ message: "Login inválido" });
+});
+
+function verifyJWT(req, res, next) {
+  const token = req.headers["x-access-token"];
+  if (!token)
+    return res.status(401).json({ auth: false, message: "no token provided." });
+
+  jwt.verify(token, process.env.SECRET, function (err, decoded) {
+    if (err)
+      return res
+        .status(500)
+        .json({ auth: false, message: "Failed to authenticate token." });
+
+    req.userId = decoded.id;
+    next();
+  });
+}
+
+app.get("/cliente/", verifyJWT, async (req, res, next) => {
   try {
     const { rows } = await pool.query("SELECT * FROM cliente");
     return res.status(200).send(rows);
