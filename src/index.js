@@ -1,19 +1,15 @@
 const express = require("express");
-const { Pool } = require("pg");
 require("dotenv").config();
 const PORT = 3333;
 const jwt = require("jsonwebtoken");
-const pool = new Pool({
-  connectionString: `postgres://postgres:postgres@localhost:5432/api_restaurante`,
-});
+const bd = require("./config/bd");
+const bodyParser = require("body-parser");
 
 const app = express();
 
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 app.use(express.json());
-
-app.get("/", (req, res) => {
-  console.log("Hello World");
-});
 
 app.post("/login", (req, res, next) => {
   if (req.body.user === "user" && req.body.password === "123") {
@@ -44,19 +40,19 @@ function verifyJWT(req, res, next) {
 
 app.get("/cliente/", verifyJWT, async (req, res, next) => {
   try {
-    const { rows } = await pool.query("SELECT * FROM cliente");
+    const { rows } = await bd.conn.query("SELECT * FROM cliente");
     return res.status(200).send(rows);
   } catch (err) {
     return res.status(400).send(err);
   }
 });
 
-app.post("/cliente/create", async (req, res) => {
+app.post("/cliente/create", verifyJWT, async (req, res, next) => {
   const { nome, cpf, telefone, datanascimento, endereco } = req.body;
   const { id } = req.params;
 
   try {
-    const cliente = await pool.query(
+    const cliente = await bd.conn.query(
       "INSERT INTO cliente (nome, cpf, telefone, datanascimento, endereco) VALUES ($1, $2, $3, $4 ,$5) RETURNING *",
       [nome, cpf, telefone, datanascimento, endereco]
     );
@@ -67,11 +63,11 @@ app.post("/cliente/create", async (req, res) => {
   }
 });
 
-app.put("/cliente/update", async (req, res) => {
+app.put("/cliente/update", verifyJWT, async (req, res, next) => {
   const { nome, cpf, telefone, datanascimento, endereco, id } = req.body;
 
   try {
-    const cliente = await pool.query(
+    const cliente = await bd.conn.query(
       "UPDATE cliente SET nome = $1, cpf = $2, telefone = $3, datanascimento = $4, endereco = $5 WHERE id = $6 RETURNING *",
       [nome, cpf, telefone, datanascimento, endereco, id]
     );
@@ -82,11 +78,11 @@ app.put("/cliente/update", async (req, res) => {
   }
 });
 
-app.delete("/cliente/delete", async (req, res) => {
+app.delete("/cliente/delete", verifyJWT, async (req, res, next) => {
   const { nome } = req.body;
   const { id } = req.params;
   try {
-    const cliente = await pool.query("DELETE FROM cliente WHERE nome = $1", [
+    const cliente = await bd.conn.query("DELETE FROM cliente WHERE nome = $1", [
       nome,
     ]);
     console.log("Cliente deletado com sucesso!");
@@ -96,6 +92,430 @@ app.delete("/cliente/delete", async (req, res) => {
   }
 });
 
+app.get("/estoque/", verifyJWT, async (req, res, next) => {
+  try {
+    const { rows } = await bd.conn.query("SELECT * FROM estoque");
+    return res.status(200).send(rows);
+  } catch (err) {
+    return res.status(400).send(err);
+  }
+});
+
+app.post("/estoque/create", verifyJWT, async (req, res, next) => {
+  const { idproduto, itemestoque, quantidadeitem, valorunidade } = req.body;
+  const { id } = req.params;
+
+  try {
+    const estoque = await bd.conn.query(
+      "INSERT INTO estoque (idproduto, itemestoque, quantidadeitem, valorunidade,  VALUES ($1, $2, $3, $4) RETURNING *",
+      [idproduto, itemestoque, quantidadeitem, valorunidade]
+    );
+    console.log("Estoque cadastrado com sucesso!");
+    return res.status(200).send(estoque.rows);
+  } catch (err) {
+    return res.status(400).send(err);
+  }
+});
+
+app.put("/estoque/update", verifyJWT, async (req, res, next) => {
+  const { idproduto, itemestoque, quantidadeitem, valorunidade, id } = req.body;
+
+  try {
+    const estoque = await bd.conn.query(
+      "UPDATE estoque SET idproduto = $1, itemestoque = $2, quantidadeitem = $3, valorunidade = $4 WHERE id = $5 RETURNING *",
+      [idproduto, itemestoque, quantidadeitem, valorunidade, id]
+    );
+    console.log("Estoque atualizado com sucesso!");
+    return res.status(200).send(estoque.rows);
+  } catch (err) {
+    return res.status(400).send(err);
+  }
+});
+
+app.delete("/estoque/delete", verifyJWT, async (req, res, next) => {
+  const { idproduto } = req.body;
+  const { id } = req.params;
+  try {
+    const estoque = await bd.conn.query(
+      "DELETE FROM estoque WHERE idproduto = $1",
+      [idproduto]
+    );
+    console.log("Estoque deletado com sucesso!");
+    return res.status(200).send(estoque.rows);
+  } catch (err) {
+    return res.status(400).send(err);
+  }
+});
+
+app.get("/fornecedor/", verifyJWT, async (req, res, next) => {
+  try {
+    const { rows } = await bd.conn.query("SELECT * FROM fornecedor");
+    return res.status(200).send(rows);
+  } catch (err) {
+    return res.status(400).send(err);
+  }
+});
+
+app.post("/fornecedor/create", verifyJWT, async (req, res, next) => {
+  const { nomefornecedor, cnpj, quantidadeitem, valorunidade } = req.body;
+  const { id } = req.params;
+
+  try {
+    const fornecedor = await bd.conn.query(
+      "INSERT INTO fornecedor (nomefornecedor, cnpj, quantidadeitem, valorunidade ) VALUES ($1, $2, $3, $4) RETURNING *",
+      [nomefornecedor, cnpj, quantidadeitem, valorunidade]
+    );
+    console.log("Fornecedor cadastrado com sucesso!");
+    return res.status(200).send(fornecedor.rows);
+  } catch (err) {
+    return res.status(400).send(err);
+  }
+});
+
+app.put("/fornecedor/update", verifyJWT, async (req, res, next) => {
+  const { nomefornecedor, cnpj, quantidadeitem, valorunidade, id } = req.body;
+
+  try {
+    const fornecedor = await bd.conn.query(
+      "UPDATE fornecedor SET nomefornecedor = $1, cnpj = $2, quantidadeitem = $3, valorunidade = $4,  WHERE id = $5 RETURNING *",
+      [nomefornecedor, cnpj, quantidadeitem, valorunidade, id]
+    );
+    console.log("Fornecedor atualizado com sucesso!");
+    return res.status(200).send(fornecedor.rows);
+  } catch (err) {
+    return res.status(400).send(err);
+  }
+});
+
+app.delete("/fornecedor/delete", verifyJWT, async (req, res, next) => {
+  const { nomefornecedor } = req.body;
+  const { id } = req.params;
+  try {
+    const fornecedor = await bd.conn.query(
+      "DELETE FROM fornecedor WHERE nomefornecedor = $1",
+      [nomefornecedor]
+    );
+    console.log("Fornecedor deletado com sucesso!");
+    return res.status(200).send(fornecedor.rows);
+  } catch (err) {
+    return res.status(400).send(err);
+  }
+});
+
+app.get("/pedidocliente/", verifyJWT, async (req, res, next) => {
+  try {
+    const { rows } = await bd.conn.query("SELECT * FROM pedidocliente");
+    return res.status(200).send(rows);
+  } catch (err) {
+    return res.status(400).send(err);
+  }
+});
+
+app.post("/pedidocliente/create", verifyJWT, async (req, res, next) => {
+  const {
+    numeropedido,
+    idcliente,
+    idfuncionario,
+    idproduto,
+    quantidadeproduto,
+    valorunidade,
+  } = req.body;
+  const { id } = req.params;
+
+  try {
+    const pedidocliente = await bd.conn.query(
+      "INSERT INTO pedidocliente (numeropedido, idcliente, idfuncionario, idproduto, quantidadeproduto, valorunidade) VALUES ($1, $2, $3, $4 ,$5, $6) RETURNING *",
+      [
+        numeropedido,
+        idcliente,
+        idfuncionario,
+        idproduto,
+        quantidadeproduto,
+        valorunidade,
+      ]
+    );
+    console.log("Pedido do Cliente cadastrado com sucesso!");
+    return res.status(200).send(pedidocliente.rows);
+  } catch (err) {
+    return res.status(400).send(err);
+  }
+});
+
+app.put("/pedidocliente/update", verifyJWT, async (req, res, next) => {
+  const {
+    numeropedido,
+    idcliente,
+    idfuncionario,
+    idproduto,
+    quantidadeproduto,
+    valorunidade,
+    id,
+  } = req.body;
+
+  try {
+    const pedidocliente = await bd.conn.query(
+      "UPDATE pedidocliente SET numeropedido = $1, idcliente = $2, idfuncionario = $3, idproduto = $4, quantidadeproduto = $5, valorunidade = $6 WHERE id = $7 RETURNING *",
+      [
+        numeropedido,
+        idcliente,
+        idfuncionario,
+        idproduto,
+        quantidadeproduto,
+        valorunidade,
+        id,
+      ]
+    );
+    console.log("Pedido do Cliente atualizado com sucesso!");
+    return res.status(200).send(pedidocliente.rows);
+  } catch (err) {
+    return res.status(400).send(err);
+  }
+});
+
+app.delete("/pedidocliente/delete", verifyJWT, async (req, res, next) => {
+  const { numeropedido } = req.body;
+  const { id } = req.params;
+  try {
+    const pedidocliente = await bd.conn.query(
+      "DELETE FROM pedidocliente WHERE numeropedido = $1",
+      [numeropedido]
+    );
+    console.log("Pedido do Cliente deletado com sucesso!");
+    return res.status(200).send(pedidocliente.rows);
+  } catch (err) {
+    return res.status(400).send(err);
+  }
+});
+
+app.get("/pedidofornecedor/", verifyJWT, async (req, res, next) => {
+  try {
+    const { rows } = await bd.conn.query("SELECT * FROM pedidofornecedor");
+    return res.status(200).send(rows);
+  } catch (err) {
+    return res.status(400).send(err);
+  }
+});
+
+app.post("/pedidofornecedor/create", verifyJWT, async (req, res, next) => {
+  const {
+    numeropedido,
+    idfornecedor,
+    idfuncionario,
+    idproduto,
+    quantidadeproduto,
+    valorunidade,
+  } = req.body;
+  const { id } = req.params;
+
+  try {
+    const pedidofornecedor = await bd.conn.query(
+      "INSERT INTO pedidofornecedor (numeropedido, idfornecedor, idfuncionario, idproduto, quantidadeproduto, valorunidade) VALUES ($1, $2, $3, $4 ,$5, $6) RETURNING *",
+      [
+        numeropedido,
+        idfornecedor,
+        idfuncionario,
+        idproduto,
+        quantidadeproduto,
+        valorunidade,
+      ]
+    );
+    console.log("Pedido do Fornecedor cadastrado com sucesso!");
+    return res.status(200).send(pedidofornecedor.rows);
+  } catch (err) {
+    return res.status(400).send(err);
+  }
+});
+
+app.put("/pedidofornecedor/update", verifyJWT, async (req, res, next) => {
+  const {
+    numeropedido,
+    idfornecedor,
+    idfuncionario,
+    idproduto,
+    quantidadeproduto,
+    valorunidade,
+    id,
+  } = req.body;
+
+  try {
+    const pedidofornecedor = await bd.conn.query(
+      "UPDATE pedidofornecedor SET numeropedido = $1, idfornecedor = $2, idfuncionario = $3, idproduto = $4, quantidadeproduto = $5, valorunidade = $6 WHERE id = $7 RETURNING *",
+      [
+        numeropedido,
+        idfornecedor,
+        idfuncionario,
+        idproduto,
+        quantidadeproduto,
+        valorunidade,
+        id,
+      ]
+    );
+    console.log("Pedido do Fornecedor atualizado com sucesso!");
+    return res.status(200).send(pedidofornecedor.rows);
+  } catch (err) {
+    return res.status(400).send(err);
+  }
+});
+
+app.delete("/pedidofornecedor/delete", verifyJWT, async (req, res, next) => {
+  const { numeropedido } = req.body;
+  const { id } = req.params;
+  try {
+    const pedidofornecedor = await bd.conn.query(
+      "DELETE FROM pedidofornecedor WHERE numeropedido = $1",
+      [numeropedido]
+    );
+    console.log("Pedido do Fornecedor deletado com sucesso!");
+    return res.status(200).send(pedidofornecedor.rows);
+  } catch (err) {
+    return res.status(400).send(err);
+  }
+});
+
+app.get("/produto/", verifyJWT, async (req, res, next) => {
+  try {
+    const { rows } = await bd.conn.query("SELECT * FROM produto");
+    return res.status(200).send(rows);
+  } catch (err) {
+    return res.status(400).send(err);
+  }
+});
+
+app.post("/produto/create", verifyJWT, async (req, res, next) => {
+  const {
+    idfornecedor,
+    nomeproduto,
+    tipoproduto,
+    descricao,
+    quantidade,
+    valorunidade,
+    datacompra,
+  } = req.body;
+  const { id } = req.params;
+
+  try {
+    const produto = await bd.conn.query(
+      "INSERT INTO produto (idfornecedor, nomeproduto, tipoproduto, descricao, quantidade, valorunidade, datacompra) VALUES ($1, $2, $3, $4 ,$5, $6, $7) RETURNING *",
+      [
+        idfornecedor,
+        nomeproduto,
+        tipoproduto,
+        descricao,
+        quantidade,
+        valorunidade,
+        datacompra,
+      ]
+    );
+    console.log("Produto cadastrado com sucesso!");
+    return res.status(200).send(produto.rows);
+  } catch (err) {
+    return res.status(400).send(err);
+  }
+});
+
+app.put("/produto/update", verifyJWT, async (req, res, next) => {
+  const {
+    idfornecedor,
+    nomeproduto,
+    tipoproduto,
+    descricao,
+    quantidade,
+    valorunidade,
+    datacompra,
+    id,
+  } = req.body;
+
+  try {
+    const produto = await bd.conn.query(
+      "UPDATE produto SET idfornecedor = $1, nomeproduto = $2, tipoproduto = $3, descricao = $4, quantidade = $5, valorunidade = $6, datacompra = $7 WHERE id = $8 RETURNING *",
+      [
+        idfornecedor,
+        nomeproduto,
+        tipoproduto,
+        descricao,
+        quantidade,
+        valorunidade,
+        datacompra,
+        id,
+      ]
+    );
+    console.log("Produto atualizado com sucesso!");
+    return res.status(200).send(produto.rows);
+  } catch (err) {
+    return res.status(400).send(err);
+  }
+});
+
+app.delete("/produto/delete", verifyJWT, async (req, res, next) => {
+  const { idfornecedor } = req.body;
+  const { id } = req.params;
+  try {
+    const produto = await bd.conn.query(
+      "DELETE FROM produto WHERE idfornecedor = $1",
+      [idfornecedor]
+    );
+    console.log("Produto deletado com sucesso!");
+    return res.status(200).send(produto.rows);
+  } catch (err) {
+    return res.status(400).send(err);
+  }
+});
+
+app.get("/funcionario/", verifyJWT, async (req, res, next) => {
+  try {
+    const { rows } = await bd.conn.query("SELECT * FROM funcionario");
+    return res.status(200).send(rows);
+  } catch (err) {
+    return res.status(400).send(err);
+  }
+});
+
+app.post("/funcionario/create", verifyJWT, async (req, res, next) => {
+  const { nome, cpf, telefone, datanascimento, endereco } = req.body;
+  const { id } = req.params;
+
+  try {
+    const funcionario = await bd.conn.query(
+      "INSERT INTO funcionario (nome, cpf, telefone, datanascimento, endereco) VALUES ($1, $2, $3, $4 ,$5) RETURNING *",
+      [nome, cpf, telefone, datanascimento, endereco]
+    );
+    console.log("funcionario cadastrado com sucesso!");
+    return res.status(200).send(funcionario.rows);
+  } catch (err) {
+    return res.status(400).send(err);
+  }
+});
+
+app.put("/funcionario/update", verifyJWT, async (req, res, next) => {
+  const { nome, cpf, telefone, datanascimento, endereco, id } = req.body;
+
+  try {
+    const funcionario = await bd.conn.query(
+      "UPDATE funcionario SET nome = $1, cpf = $2, telefone = $3, datanascimento = $4, endereco = $5 WHERE id = $6 RETURNING *",
+      [nome, cpf, telefone, datanascimento, endereco, id]
+    );
+    console.log("funcionario atualizado com sucesso!");
+    return res.status(200).send(funcionario.rows);
+  } catch (err) {
+    return res.status(400).send(err);
+  }
+});
+
+app.delete("/funcionario/delete", verifyJWT, async (req, res, next) => {
+  const { nome } = req.body;
+  const { id } = req.params;
+  try {
+    const funcionario = await bd.conn.query(
+      "DELETE FROM funcionario WHERE nome = $1",
+      [nome]
+    );
+    console.log("funcionario deletado com sucesso!");
+    return res.status(200).send(funcionario.rows);
+  } catch (err) {
+    return res.status(400).send(err);
+  }
+});
+
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
-//create a CRUD for the table cliente into the database api_restaurante
+module.exports = { app, verifyJWT };
