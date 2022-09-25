@@ -1,14 +1,20 @@
 {
   "name": "api-restaurante",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon src/index.js",
-    "start": "node src/index.js"
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "api",
+    "restaurante",
+    "express",
+    "postgresql",
+    "jsonwebtoken"
+  ],
+  "author": "pescador95",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.20.0",
@@ -24,5 +30,5 @@
     "nodemon": "^2.0.20",
     "typescript": "^4.8.3"
   },
-  "description": ""
+  "description": "Desafio proposto na matéria de Desenvolvimento Web no primeiro bimestre da Turma de Engenharia de Software 6º período do Centro Universitário Fundação Assis Gurgacz, turma de 2020."
 }

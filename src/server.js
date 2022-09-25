@@ -581,4 +581,4 @@ app.delete("/funcionario/delete", verifyJWT, async (req, res, next) => {
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
-module.exports = { app, verifyJWT };
+module.exports = { app };
