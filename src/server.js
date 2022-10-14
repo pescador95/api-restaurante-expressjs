@@ -5,12 +5,19 @@ const jwt = require("jsonwebtoken");
 const bd = require("./config/bd");
 const bodyParser = require("body-parser");
 const { Router } = require("express");
+const cors = require("cors");
 
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.json());
+
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 
 function verifyJWT(req, res, next) {
   const token = req.headers["x-access-token"];
@@ -30,9 +37,19 @@ function verifyJWT(req, res, next) {
 
 app.listen(PORT, () => console.log(`Server running on port: ${PORT}...`));
 
-module.exports = { app, verifyJWT, bd, jwt, Router, PORT, dotenv, express };
+module.exports = {
+  app,
+  verifyJWT,
+  bd,
+  jwt,
+  Router,
+  PORT,
+  dotenv,
+  express,
+  cors,
+};
 
-require("./routes/auth")(bd, app, jwt, verifyJWT);
+require("./routes/auth")(bd, app, jwt, verifyJWT, cors);
 require("./routes/cliente")(bd, app, verifyJWT);
 require("./routes/funcionario")(bd, app, verifyJWT);
 require("./routes/fornecedor")(bd, app, verifyJWT);
