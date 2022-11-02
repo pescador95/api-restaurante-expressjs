@@ -58,3 +58,4 @@ require("./routes/pedidocliente")(bd, app, verifyJWT);
 require("./routes/pedidofornecedor")(bd, app, verifyJWT);
 require("./routes/produto")(bd, app, verifyJWT);
 require("./routes/usuario")(bd, app, verifyJWT);
+require("./routes/itempedido")(bd, app, verifyJWT);

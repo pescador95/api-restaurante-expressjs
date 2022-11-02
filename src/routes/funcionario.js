@@ -8,7 +8,7 @@ module.exports = function (bd, app, verifyJWT) {
     }
   });
 
-  app.post("/funcionario/create", verifyJWT, async (req, res, next) => {
+  app.post("/funcionario/", verifyJWT, async (req, res, next) => {
     const { nome, cpf, telefone, datanascimento, endereco } = req.body;
     const { id } = req.params;
 
@@ -24,7 +24,7 @@ module.exports = function (bd, app, verifyJWT) {
     }
   });
 
-  app.put("/funcionario/update", verifyJWT, async (req, res, next) => {
+  app.put("/funcionario/", verifyJWT, async (req, res, next) => {
     const { nome, cpf, telefone, datanascimento, endereco, id } = req.body;
 
     try {
@@ -39,16 +39,17 @@ module.exports = function (bd, app, verifyJWT) {
     }
   });
 
-  app.delete("/funcionario/delete", verifyJWT, async (req, res, next) => {
-    const { nome } = req.body;
-    const { id } = req.params;
+  app.delete("/funcionario/", verifyJWT, async (req, res, next) => {
+    const { id } = req.body;
     try {
-      const funcionario = await bd.conn.query(
-        "DELETE FROM funcionario WHERE nome = $1",
-        [nome]
-      );
-      console.log("funcionario deletado com sucesso!");
-      return res.status(200).send(funcionario.rows);
+      await id.forEach((element) => {
+        const funcionario = bd.conn.query(
+          "DELETE FROM funcionario WHERE id = $1",
+          [element]
+        );
+        console.log("funcionario deletado com sucesso!");
+        return res.status(200).send(funcionario.rows);
+      });
     } catch (err) {
       return res.status(400).send(err);
     }

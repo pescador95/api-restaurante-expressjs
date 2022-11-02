@@ -8,7 +8,20 @@ module.exports = function (bd, app, verifyJWT) {
     }
   });
 
-  app.post("/cliente/create", verifyJWT, async (req, res, next) => {
+  app.get("/cliente/:id", verifyJWT, async (req, res, next) => {
+    const { id } = req.params.id;
+    try {
+      const { rows } = await bd.conn.query(
+        "SELECT * FROM cliente WHERE id = $1",
+        [id]
+      );
+      return res.status(200).send(rows);
+    } catch (err) {
+      return res.status(400).send(err);
+    }
+  });
+
+  app.post("/cliente/", verifyJWT, async (req, res, next) => {
     const { nome, cpf, telefone, datanascimento, endereco } = req.body;
     const { id } = req.params;
 
@@ -24,13 +37,13 @@ module.exports = function (bd, app, verifyJWT) {
     }
   });
 
-  app.put("/cliente/update", verifyJWT, async (req, res, next) => {
-    const { nome, cpf, telefone, datanascimento, endereco, id } = req.body;
+  app.put("/cliente/", verifyJWT, async (req, res, next) => {
+    const { id, nome, cpf, telefone, datanascimento, endereco } = req.body;
 
     try {
       const cliente = await bd.conn.query(
-        "UPDATE cliente SET nome = $1, cpf = $2, telefone = $3, datanascimento = $4, endereco = $5 WHERE id = $6 RETURNING *",
-        [nome, cpf, telefone, datanascimento, endereco, id]
+        "UPDATE cliente SET nome = $2, cpf = $3, telefone = $4, datanascimento = $5, endereco = $6 WHERE id = $1 RETURNING *",
+        [id, nome, cpf, telefone, datanascimento, endereco]
       );
       console.log("Cliente atualizado com sucesso!");
       return res.status(200).send(cliente.rows);
@@ -39,16 +52,16 @@ module.exports = function (bd, app, verifyJWT) {
     }
   });
 
-  app.delete("/cliente/delete", verifyJWT, async (req, res, next) => {
-    const { nome } = req.body;
-    const { id } = req.params;
+  app.delete("/cliente/", verifyJWT, async (req, res, next) => {
+    const { id } = req.body;
     try {
-      const cliente = await bd.conn.query(
-        "DELETE FROM cliente WHERE nome = $1",
-        [nome]
-      );
-      console.log("Cliente deletado com sucesso!");
-      return res.status(200).send(cliente.rows);
+      await id.forEach((element) => {
+        const cliente = bd.conn.query("DELETE FROM cliente WHERE id = $1", [
+          element,
+        ]);
+        console.log("Cliente deletado com sucesso!");
+        return res.status(200).send(cliente.rows);
+      });
     } catch (err) {
       return res.status(400).send(err);
     }
