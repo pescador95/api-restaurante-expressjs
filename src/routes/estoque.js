@@ -8,14 +8,14 @@ module.exports = function (bd, app, verifyJWT) {
     }
   });
 
-  app.post("/estoque/create", verifyJWT, async (req, res, next) => {
-    const { idproduto, itemestoque, quantidadeitem, valorunidade } = req.body;
+  app.post("/estoque/", verifyJWT, async (req, res, next) => {
+    const { idproduto, quantidadeitem, custounidade } = req.body;
     const { id } = req.params;
 
     try {
       const estoque = await bd.conn.query(
-        "INSERT INTO estoque (idproduto, itemestoque, quantidadeitem, valorunidade) VALUES ($1, $2, $3, $4) RETURNING *",
-        [idproduto, itemestoque, quantidadeitem, valorunidade]
+        "INSERT INTO estoque (idproduto, quantidadeitem, custounidade) VALUES ($1, $2, $3) RETURNING *",
+        [idproduto, quantidadeitem, custounidade]
       );
       console.log("Estoque cadastrado com sucesso!");
       return res.status(200).send(estoque.rows);
@@ -24,14 +24,13 @@ module.exports = function (bd, app, verifyJWT) {
     }
   });
 
-  app.put("/estoque/update", verifyJWT, async (req, res, next) => {
-    const { idproduto, itemestoque, quantidadeitem, valorunidade, id } =
-      req.body;
+  app.put("/estoque/", verifyJWT, async (req, res, next) => {
+    const { idproduto, quantidadeitem, custounidade, id } = req.body;
 
     try {
       const estoque = await bd.conn.query(
-        "UPDATE estoque SET idproduto = $1, itemestoque = $2, quantidadeitem = $3, valorunidade = $4 WHERE id = $5 RETURNING *",
-        [idproduto, itemestoque, quantidadeitem, valorunidade, id]
+        "UPDATE estoque SET idproduto = $1, quantidadeitem = $2, custounidade = $3, WHERE id = $4 RETURNING *",
+        [idproduto, quantidadeitem, custounidade, id]
       );
       console.log("Estoque atualizado com sucesso!");
       return res.status(200).send(estoque.rows);
@@ -40,16 +39,16 @@ module.exports = function (bd, app, verifyJWT) {
     }
   });
 
-  app.delete("/estoque/delete", verifyJWT, async (req, res, next) => {
-    const { idproduto } = req.body;
-    const { id } = req.params;
+  app.delete("/estoque/", verifyJWT, async (req, res, next) => {
+    const { id } = req.body;
     try {
-      const estoque = await bd.conn.query(
-        "DELETE FROM estoque WHERE idproduto = $1",
-        [idproduto]
-      );
-      console.log("Estoque deletado com sucesso!");
-      return res.status(200).send(estoque.rows);
+      await id.forEach((element) => {
+        const estoque = bd.conn.query("DELETE FROM estoque WHERE id = $1", [
+          element,
+        ]);
+        console.log("Estoque deletado com sucesso!");
+        return res.status(200).send(estoque.rows);
+      });
     } catch (err) {
       return res.status(400).send(err);
     }

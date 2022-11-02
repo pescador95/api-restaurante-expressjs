@@ -8,7 +8,7 @@ module.exports = function (bd, app, verifyJWT) {
     }
   });
 
-  app.post("/fornecedor/create", verifyJWT, async (req, res, next) => {
+  app.post("/fornecedor/", verifyJWT, async (req, res, next) => {
     const { nomefornecedor, cnpj } = req.body;
     const { id } = req.params;
 
@@ -24,7 +24,7 @@ module.exports = function (bd, app, verifyJWT) {
     }
   });
 
-  app.put("/fornecedor/update", verifyJWT, async (req, res, next) => {
+  app.put("/fornecedor/", verifyJWT, async (req, res, next) => {
     const { nomefornecedor, cnpj, id } = req.body;
 
     try {
@@ -39,16 +39,17 @@ module.exports = function (bd, app, verifyJWT) {
     }
   });
 
-  app.delete("/fornecedor/delete", verifyJWT, async (req, res, next) => {
-    const { nomefornecedor } = req.body;
-    const { id } = req.params;
+  app.delete("/fornecedor/", verifyJWT, async (req, res, next) => {
+    const { id } = req.body;
     try {
-      const fornecedor = await bd.conn.query(
-        "DELETE FROM fornecedor WHERE nomefornecedor = $1",
-        [nomefornecedor]
-      );
-      console.log("Fornecedor deletado com sucesso!");
-      return res.status(200).send(fornecedor.rows);
+      await id.forEach((element) => {
+        const fornecedor = bd.conn.query(
+          "DELETE FROM fornecedor WHERE id = $1",
+          [element]
+        );
+        console.log("Fornecedor deletado com sucesso!");
+        return res.status(200).send(fornecedor.rows);
+      });
     } catch (err) {
       return res.status(400).send(err);
     }

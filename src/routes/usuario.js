@@ -8,7 +8,7 @@ module.exports = function (bd, app, verifyJWT) {
     }
   });
 
-  app.post("/usuario/create", verifyJWT, async (req, res, next) => {
+  app.post("/usuario/", verifyJWT, async (req, res, next) => {
     const { login, senha, idfuncionario } = req.body;
     const { id } = req.params;
 
@@ -24,7 +24,7 @@ module.exports = function (bd, app, verifyJWT) {
     }
   });
 
-  app.put("/usuario/update", verifyJWT, async (req, res, next) => {
+  app.put("/usuario/", verifyJWT, async (req, res, next) => {
     const { login, senha, idfuncionario, id } = req.body;
 
     try {
@@ -39,16 +39,16 @@ module.exports = function (bd, app, verifyJWT) {
     }
   });
 
-  app.delete("/usuario/delete", verifyJWT, async (req, res, next) => {
-    const { login } = req.body;
-    const { id } = req.params;
+  app.delete("/usuario/", verifyJWT, async (req, res, next) => {
+    const { id } = req.body;
     try {
-      const usuario = await bd.conn.query(
-        "DELETE FROM usuario WHERE login = $1",
-        [login]
-      );
-      console.log("usuario deletado com sucesso!");
-      return res.status(200).send(usuario.rows);
+      await id.forEach((element) => {
+        const usuario = bd.conn.query("DELETE FROM usuario WHERE id = $1", [
+          element,
+        ]);
+        console.log("usuario deletado com sucesso!");
+        return res.status(200).send(usuario.rows);
+      });
     } catch (err) {
       return res.status(400).send(err);
     }
