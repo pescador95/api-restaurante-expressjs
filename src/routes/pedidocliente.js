@@ -9,14 +9,13 @@ module.exports = function (bd, app, verifyJWT) {
   });
 
   app.post("/pedidocliente/", verifyJWT, async (req, res, next) => {
-    const { numeropedido, idcliente, idfuncionario, valortotalpedido } =
-      req.body;
+    const { idcliente, idfuncionario, valortotalpedido } = req.body;
     const { id } = req.params;
 
     try {
       const pedidocliente = await bd.conn.query(
-        "INSERT INTO pedidocliente (numeropedido, idcliente, idfuncionario valortotalpedido) VALUES ($1, $2, $3, $4 ,$5) RETURNING *",
-        [numeropedido, idcliente, idfuncionario, valortotalpedido]
+        "INSERT INTO pedidocliente ( idcliente, idfuncionario, valortotalpedido) VALUES ($1, $2, $3) RETURNING *",
+        [idcliente, idfuncionario, valortotalpedido]
       );
       console.log("Pedido do Cliente cadastrado com sucesso!");
       return res.status(200).send(pedidocliente.rows);
@@ -26,13 +25,12 @@ module.exports = function (bd, app, verifyJWT) {
   });
 
   app.put("/pedidocliente/", verifyJWT, async (req, res, next) => {
-    const { id, numeropedido, idcliente, idfuncionario, valortotalpedido } =
-      req.body;
+    const { id, idcliente, idfuncionario, valortotalpedido } = req.body;
 
     try {
       const pedidocliente = await bd.conn.query(
-        "UPDATE pedidocliente SET numeropedido = $2, idcliente = $3, idfuncionario = $4, valortotalpedido = $5 WHERE id = $1 RETURNING *",
-        [id, numeropedido, idcliente, idfuncionario, valortotalpedido]
+        "UPDATE pedidocliente SET idcliente = $2, idfuncionario = $3, valortotalpedido = $4 WHERE id = $1 RETURNING *",
+        [id, idcliente, idfuncionario, valortotalpedido]
       );
       console.log("Pedido do Cliente atualizado com sucesso!");
       return res.status(200).send(pedidocliente.rows);

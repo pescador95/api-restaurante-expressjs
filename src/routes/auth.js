@@ -1,5 +1,5 @@
-module.exports = function (bd, app, jwt, verifyJWT) {
-  app.post("/auth", async (req, res, next) => {
+module.exports = function (bd, app, jwt) {
+  app.post("/auth", async (req, res) => {
     let login = req.body.login;
     let senha = req.body.senha;
     try {
