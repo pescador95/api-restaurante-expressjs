@@ -12,7 +12,7 @@ module.exports = function (bd, app, jwt) {
         const token = jwt.sign({ id }, process.env.SECRET, {
           expiresIn: 600,
         });
-        return res.json({ auth: true, token: token });
+        return res.json({ auth: true, token: token, login: login });
       }
     } catch (err) {
       res.status(500).json({ message: "Credenciais incorretas." });
