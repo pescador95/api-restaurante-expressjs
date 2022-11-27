@@ -14,7 +14,7 @@ module.exports = function (bd, app, verifyJWT) {
 
     try {
       const pedidofornecedor = await bd.conn.query(
-        "INSERT INTO pedidofornecedor ( idfornecedor, idfuncionario, valortotalpedido) VALUES ($1, $2, $3) RETURNING *",
+        "INSERT INTO pedidofornecedor ( idfornecedor, idfuncionario, valortotalpedido, datapedido) VALUES ($1, $2, $3, NOW()) RETURNING *",
         [idfornecedor, idfuncionario, valortotalpedido]
       );
       console.log("Pedido do Fornecedor cadastrado com sucesso!");

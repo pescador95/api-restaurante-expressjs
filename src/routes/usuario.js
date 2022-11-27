@@ -8,6 +8,15 @@ module.exports = function (bd, app, verifyJWT) {
     }
   });
 
+  app.get("/usuario/count", verifyJWT, async (req, res, next) => {
+    try {
+      const { rows } = await bd.conn.query("SELECT COUNT(login) FROM usuario");
+      return res.status(200).send(rows);
+    } catch (err) {
+      return res.status(400).send(err);
+    }
+  });
+
   app.post("/usuario/", verifyJWT, async (req, res, next) => {
     const { login, senha, idfuncionario } = req.body;
     const { id } = req.params;
