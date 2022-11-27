@@ -49,7 +49,7 @@ module.exports = {
   cors,
 };
 
-require("./routes/auth")(bd, app, jwt, cors);
+require("./routes/auth")(bd, app, jwt);
 require("./routes/cliente")(bd, app, verifyJWT);
 require("./routes/funcionario")(bd, app, verifyJWT);
 require("./routes/fornecedor")(bd, app, verifyJWT);
