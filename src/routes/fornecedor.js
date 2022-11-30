@@ -24,6 +24,15 @@ module.exports = function (bd, app, verifyJWT) {
     }
   });
 
+  app.get("/fornecedor/count", verifyJWT, async (req, res, next) => {
+    try {
+      const { rows } = await bd.conn.query("SELECT COUNT(id) FROM fornecedor");
+      return res.status(200).send(rows[0]);
+    } catch (err) {
+      return res.status(400).send(err);
+    }
+  });
+
   app.put("/fornecedor/", verifyJWT, async (req, res, next) => {
     const { nomefornecedor, cnpj, id } = req.body;
 

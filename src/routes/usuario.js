@@ -11,7 +11,7 @@ module.exports = function (bd, app, verifyJWT) {
   app.get("/usuario/count", verifyJWT, async (req, res, next) => {
     try {
       const { rows } = await bd.conn.query("SELECT COUNT(login) FROM usuario");
-      return res.status(200).send(rows);
+      return res.status(200).send(rows[0]);
     } catch (err) {
       return res.status(400).send(err);
     }
