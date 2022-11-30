@@ -10,7 +10,7 @@ module.exports = function (bd, app, jwt) {
       if (rows) {
         const id = rows[0].id;
         const token = jwt.sign({ id }, process.env.SECRET, {
-          expiresIn: 600,
+          expiresIn: 10000,
         });
         return res.json({ auth: true, token: token, login: login });
       }
@@ -30,7 +30,7 @@ module.exports = function (bd, app, jwt) {
           .json({ auth: false, message: "Failed to authenticated the token." });
       const id = decoded.id;
       const token = jwt.sign({ id }, process.env.SECRET, {
-        expiresIn: 600,
+        expiresIn: 10000,
       });
       return res.json({ auth: true, token: token });
     });

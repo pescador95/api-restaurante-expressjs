@@ -138,7 +138,7 @@ module.exports = function (bd, app, verifyJWT) {
   });
 
   app.delete("/itempedido/", verifyJWT, async (req, res, next) => {
-    const { id } = req.body;
+    const { id } = { id: req.body };
     try {
       await id.forEach((element) => {
         const itempedido = bd.conn.query(
