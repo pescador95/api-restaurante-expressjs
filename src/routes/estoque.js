@@ -9,16 +9,27 @@ module.exports = function (bd, app, verifyJWT) {
   });
 
   app.post("/estoque/", verifyJWT, async (req, res, next) => {
-    const { idproduto, quantidadeitem, custounidade } = req.body;
-    const { id } = req.params;
+    const { idproduto, quantidade, custounidade } = {
+      quantidade: req.body.quantidade,
+      custounidade: req.body.custounidade,
+      idproduto: req.body.idproduto,
+    };
 
     try {
-      const estoque = await bd.conn.query(
-        "INSERT INTO estoque (idproduto, quantidadeitem, custounidade) VALUES ($1, $2, $3) RETURNING *",
-        [idproduto, quantidadeitem, custounidade]
+      const { rows } = await bd.conn.query(
+        "SELECT * FROM estoque WHERE idproduto = $1",
+        [idproduto]
       );
-      console.log("Estoque cadastrado com sucesso!");
-      return res.status(200).send(estoque.rows);
+      if (rows.length <= 0) {
+        const estoque = await bd.conn.query(
+          "INSERT INTO estoque (idproduto, quantidade, custounidade) VALUES ($1, $2, $3) RETURNING *",
+          [idproduto, quantidade, custounidade]
+        );
+        console.log("Estoque cadastrado com sucesso!");
+        return res.status(200).send(estoque.rows);
+      } else {
+        return res.status(400).send("Produto já cadastrado no estoque!");
+      }
     } catch (err) {
       return res.status(400).send(err);
     }
@@ -34,13 +45,19 @@ module.exports = function (bd, app, verifyJWT) {
   });
 
   app.put("/estoque/", verifyJWT, async (req, res, next) => {
-    const { idproduto, quantidadeitem, custounidade, id } = req.body;
+    const { quantidade, custounidade, id } = {
+      quantidade: req.body.quantidade,
+      custounidade: req.body.custounidade,
+      id: req.body.id,
+    };
+    console.log(quantidade, custounidade, id);
 
     try {
       const estoque = await bd.conn.query(
-        "UPDATE estoque SET idproduto = $1, quantidadeitem = $2, custounidade = $3, WHERE id = $4 RETURNING *",
-        [idproduto, quantidadeitem, custounidade, id]
+        "UPDATE estoque SET quantidade = $1, custounidade = $2 WHERE id = $3 RETURNING *",
+        [quantidade, custounidade, id]
       );
+      console.log();
       console.log("Estoque atualizado com sucesso!");
       return res.status(200).send(estoque.rows);
     } catch (err) {

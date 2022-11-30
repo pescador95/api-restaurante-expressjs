@@ -10,27 +10,24 @@ module.exports = function (bd, app, verifyJWT) {
 
   app.post("/produto/", verifyJWT, async (req, res, next) => {
     const {
-      idfornecedor,
       nomeproduto,
+      idfornecedor,
       tipoproduto,
       descricao,
       valorunidade,
       datacompra,
-    } = req.body;
-    const { id } = req.params;
-
-    app.get("/produto/count", verifyJWT, async (req, res, next) => {
-      try {
-        const { rows } = await bd.conn.query("SELECT COUNT(id) FROM produto");
-        return res.status(200).send(rows[0]);
-      } catch (err) {
-        return res.status(400).send(err);
-      }
-    });
+    } = {
+      idfornecedor: req.body.idfornecedor,
+      nomeproduto: req.body.nomeproduto,
+      tipoproduto: req.body.tipoproduto,
+      descricao: req.body.descricao,
+      valorunidade: req.body.valorunidade,
+      datacompra: req.body.datacompra,
+    };
 
     try {
       const produto = await bd.conn.query(
-        "INSERT INTO produto (idfornecedor, nomeproduto, tipoproduto, descricao, valorunidade, datacompra) VALUES ($1, $2, $3, $4 ,$5, $6, $7) RETURNING *",
+        "INSERT INTO produto (idfornecedor, nomeproduto, tipoproduto, descricao, valorunidade, datacompra) VALUES ($1, $2, $3, $4 ,$5, $6) RETURNING *",
         [
           idfornecedor,
           nomeproduto,
@@ -42,6 +39,15 @@ module.exports = function (bd, app, verifyJWT) {
       );
       console.log("Produto cadastrado com sucesso!");
       return res.status(200).send(produto.rows);
+    } catch (err) {
+      return res.status(400).send(err);
+    }
+  });
+
+  app.get("/produto/count", verifyJWT, async (req, res, next) => {
+    try {
+      const { rows } = await bd.conn.query("SELECT COUNT(id) FROM produto");
+      return res.status(200).send(rows[0]);
     } catch (err) {
       return res.status(400).send(err);
     }

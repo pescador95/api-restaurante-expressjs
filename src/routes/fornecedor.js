@@ -9,7 +9,10 @@ module.exports = function (bd, app, verifyJWT) {
   });
 
   app.post("/fornecedor/", verifyJWT, async (req, res, next) => {
-    const { nomefornecedor, cnpj } = req.body;
+    const { nomefornecedor, cnpj } = {
+      nomefornecedor: req.body.nomefornecedor,
+      cnpj: req.body.cnpj,
+    };
     const { id } = req.params;
 
     try {
@@ -36,9 +39,11 @@ module.exports = function (bd, app, verifyJWT) {
   app.put("/fornecedor/", verifyJWT, async (req, res, next) => {
     const { nomefornecedor, cnpj, id } = req.body;
 
+    console.log(nomefornecedor, cnpj, id);
+
     try {
       const fornecedor = await bd.conn.query(
-        "UPDATE fornecedor SET nomefornecedor = $1, cnpj = $2, WHERE id = $3 RETURNING *",
+        "UPDATE fornecedor SET nomefornecedor = $1, cnpj = $2 WHERE id = $3 RETURNING *",
         [nomefornecedor, cnpj, id]
       );
       console.log("Fornecedor atualizado com sucesso!");

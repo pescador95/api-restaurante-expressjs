@@ -18,8 +18,11 @@ module.exports = function (bd, app, verifyJWT) {
   });
 
   app.post("/usuario/", verifyJWT, async (req, res, next) => {
-    const { login, senha, idfuncionario } = req.body;
-    const { id } = req.params;
+    const { login, senha, idfuncionario } = {
+      login: req.body.login,
+      senha: req.body.senha,
+      idfuncionario: req.body.idfuncionario,
+    };
 
     try {
       const usuario = await bd.conn.query(
@@ -50,7 +53,6 @@ module.exports = function (bd, app, verifyJWT) {
 
   app.delete("/usuario/", verifyJWT, async (req, res, next) => {
     const { id } = { id: req.body };
-    console.log(id);
 
     try {
       await id.forEach((element) => {
