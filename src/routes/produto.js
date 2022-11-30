@@ -25,6 +25,15 @@ module.exports = function (bd, app, verifyJWT) {
       datacompra: req.body.datacompra,
     };
 
+    app.get("/produto/count", verifyJWT, async (req, res, next) => {
+      try {
+        const { rows } = await bd.conn.query("SELECT COUNT(id) FROM produto");
+        return res.status(200).send(rows[0]);
+      } catch (err) {
+        return res.status(400).send(err);
+      }
+    });
+
     try {
       const produto = await bd.conn.query(
         "INSERT INTO produto (idfornecedor, nomeproduto, tipoproduto, descricao, valorunidade, datacompra) VALUES ($1, $2, $3, $4 ,$5, $6) RETURNING *",
