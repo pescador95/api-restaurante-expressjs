@@ -49,7 +49,7 @@ module.exports = function (bd, app, verifyJWT) {
   });
 
   app.delete("/fornecedor/", verifyJWT, async (req, res, next) => {
-    const { id } = req.body;
+    const { id } = { id: req.body };
     try {
       await id.forEach((element) => {
         const fornecedor = bd.conn.query(

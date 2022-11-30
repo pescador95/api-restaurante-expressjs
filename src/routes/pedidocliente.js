@@ -51,7 +51,7 @@ module.exports = function (bd, app, verifyJWT) {
   });
 
   app.delete("/pedidocliente/", verifyJWT, async (req, res, next) => {
-    const { id } = req.body;
+    const { id } = { id: req.body };
     try {
       await id.forEach((element) => {
         const pedidocliente = bd.conn.query(

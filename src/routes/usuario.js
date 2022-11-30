@@ -49,7 +49,9 @@ module.exports = function (bd, app, verifyJWT) {
   });
 
   app.delete("/usuario/", verifyJWT, async (req, res, next) => {
-    const { id } = req.body;
+    const { id } = { id: req.body };
+    console.log(id);
+
     try {
       await id.forEach((element) => {
         const usuario = bd.conn.query("DELETE FROM usuario WHERE id = $1", [
