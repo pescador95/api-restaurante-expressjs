@@ -73,6 +73,15 @@ module.exports = function (bd, app, verifyJWT) {
     }
   });
 
+  app.get("/itempedido/count", verifyJWT, async (req, res, next) => {
+    try {
+      const { rows } = await bd.conn.query("SELECT COUNT(id) FROM itempedido");
+      return res.status(200).send(rows[0]);
+    } catch (err) {
+      return res.status(400).send(err);
+    }
+  });
+
   app.put("/itempedido/", verifyJWT, async (req, res, next) => {
     const {
       id,
